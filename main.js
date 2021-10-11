@@ -89,6 +89,9 @@ async function send(text,callback) {
 }
 
 
+
+
+
 async function process_cmd(text) {
 	console.log(text);
 	switch (text) {
@@ -101,6 +104,19 @@ async function process_cmd(text) {
 		break;
 		case "help":
 			await send(helpText);
+			win.webContents.send("shell_ready");
+		break;
+
+		case "wait":
+			await send("waiting 5 seconds...\n")
+			setTimeout(async function(){
+				await send("Done!\n");
+				win.webContents.send("shell_ready");
+			},5000)
+		break;
+
+		case "":
+			await send("\n");
 			win.webContents.send("shell_ready");
 		break;
 

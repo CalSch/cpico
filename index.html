@@ -25,9 +25,22 @@ body {
 			term.write(text);
 		});
 
-		let a=0;
+		const color = {
+			red: "\x1b[31m",
+			green: "\x1b[32m",
+			yellow: "\x1b[33m",
+			blue: "\x1b[34m",
+			magenta: "\x1b[35m",
+			cyan: "\x1b[36m",
+			reset: "\x1b[0m"
+		};
+		const style = {
+			bold: "\x1b[1m",
+			reset: "\x1b[22m"
+		};
+
 		function prompt() {
-			return 'Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ';
+			return 'C-PICO $ ';
 		}
 
 		// function save() {
@@ -45,6 +58,7 @@ body {
 		ipcRenderer.on('shell_ready', () => {
 			mode="SHELL";
 			term.write(prompt());
+			curPos=0;
 		})
 
 		var term = new Terminal();
@@ -55,10 +69,11 @@ body {
 			term.write(ev.key);
 			console.log(ev);
 			if (ev.key=="\x7F") {
-				if (currentLine) {
-					currentLine=removeChar(currentLine,curPos);
+				if (currentLine && curPos>0) {
+					currentLine=removeChar(currentLine,curPos-1);
 					curPos--;
 					term.write("\b \b");
+
 				}
 				log=false;
 			}
